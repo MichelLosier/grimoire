@@ -5,7 +5,6 @@ import com.michellosier.grimoire.model.AuditModel;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,9 +23,10 @@ public class Recipe extends AuditModel {
 
     @ManyToMany(targetEntity=Ingredient.class)
     @Size(min=1, message="Recipe requires at least 1 ingredient")
-    private List<Ingredient> ingredients = new ArrayList<>();
+    private List<Ingredient> ingredients;
 
-    public Recipe(@NotNull String name, Integer prepTime, Integer cookTime, String instructions, @Size(min = 1, message = "Recipe requires at least 1 ingredient") List<Ingredient> ingredients) {
+    public Recipe(@NotNull String name, Integer prepTime, Integer cookTime, String instructions,
+                  @Size(min = 1, message = "Recipe requires at least 1 ingredient") List<Ingredient> ingredients) {
         this.name = name;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
