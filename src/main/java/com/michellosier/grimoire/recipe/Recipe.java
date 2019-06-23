@@ -13,7 +13,7 @@ public class Recipe extends AuditModel {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private String id;
+    private final String id;
 
     @NotNull
     private String name;
@@ -21,9 +21,11 @@ public class Recipe extends AuditModel {
     private Integer cookTime;
     private String instructions;
 
-    @ManyToMany(targetEntity=Ingredient.class)
+    @OneToMany(targetEntity=RecipeIngredient.class)
     @Size(min=1, message="Recipe requires at least 1 ingredient")
-    private List<Ingredient> ingredients;
+    private List<RecipeIngredient> ingredients;
+
+    private Recipe(){ this.id = null; }; //no arg constructor
 
     public Recipe(@NotNull String name, Integer prepTime, Integer cookTime, String instructions,
                   @Size(min = 1, message = "Recipe requires at least 1 ingredient") List<Ingredient> ingredients) {
