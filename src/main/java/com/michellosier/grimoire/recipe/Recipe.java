@@ -6,9 +6,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name="RECIPE")
+@Table(name="recipe")
 public class Recipe extends AuditModel {
 
     @Id
@@ -21,19 +22,23 @@ public class Recipe extends AuditModel {
     private Integer cookTime;
     private String instructions;
 
-    @OneToMany(targetEntity=RecipeIngredient.class)
+    @OneToMany(mappedBy = "recipe")
     @Size(min=1, message="Recipe requires at least 1 ingredient")
-    private List<RecipeIngredient> ingredients;
+    private Set<RecipeIngredient> recipeIngredients;
 
     private Recipe(){ this.id = null; }; //no arg constructor
 
     public Recipe(@NotNull String name, Integer prepTime, Integer cookTime, String instructions,
-                  @Size(min = 1, message = "Recipe requires at least 1 ingredient") List<RecipeIngredient> ingredients) {
+                  @Size(min = 1, message = "Recipe requires at least 1 ingredient") Set<RecipeIngredient> recipeIngredients) {
         this.name = name;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.instructions = instructions;
-        this.ingredients = ingredients;
+
+        for (RecipeIngredient recipeIngredient : recipeIngredients){
+            recipeIngredient.setRecipe(this);
+        }
+        this.recipeIngredients = recipeIngredients;
     }
 
     public String getName() {
@@ -68,11 +73,11 @@ public class Recipe extends AuditModel {
         this.instructions = instructions;
     }
 
-    public List<RecipeIngredient> getIngredients() {
-        return ingredients;
+    public Set<RecipeIngredient> getRecipeIngredients() {
+        return recipeIngredients;
     }
 
-    public void setIngredients(List<RecipeIngredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setIngredients(Set<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
     }
 }

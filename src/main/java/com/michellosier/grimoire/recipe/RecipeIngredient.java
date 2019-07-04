@@ -5,7 +5,7 @@ import com.michellosier.grimoire.model.AuditModel;
 import javax.persistence.*;
 
 @Entity
-@Table(name="RecipeIngredient")
+@Table(name="recipe_ingredient")
 public class RecipeIngredient extends AuditModel {
     @Id
     @JoinColumn(name= "recipe_id")
@@ -20,7 +20,32 @@ public class RecipeIngredient extends AuditModel {
     private double quantity;
     //TODO: measure unit https://www.baeldung.com/javax-measure
 
-    public RecipeIngredient(Recipe recipe, Ingredient ingredient, Double quantity){
+    public RecipeIngredient(Ingredient ingredient, Double quantity){
+        this.ingredient = ingredient;
+        this.quantity = quantity;
+    }
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
     }
 }

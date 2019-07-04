@@ -3,9 +3,10 @@ package com.michellosier.grimoire.recipe;
 import com.michellosier.grimoire.model.AuditModel;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name="Ingredient")
+@Table(name="ingredient")
 public class Ingredient extends AuditModel {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -13,6 +14,9 @@ public class Ingredient extends AuditModel {
 
     private String name;
     private IngredientCategory category;
+
+    @OneToMany(mappedBy = "ingredient")
+    private Set<RecipeIngredient> recipes;
 
     public static enum IngredientCategory {
         FRUIT,
@@ -22,9 +26,13 @@ public class Ingredient extends AuditModel {
         DAIRY,
         NUT,
         GRAIN,
+        LIQUID,
+        SPICE,
+        OIL,
+        OTHER
     }
 
-    private Ingredient(){this.id = null}// no args constructor
+    private Ingredient(){this.id = null;}// no args constructor
 
     public Ingredient(String name, IngredientCategory category) {
         this.name = name;
