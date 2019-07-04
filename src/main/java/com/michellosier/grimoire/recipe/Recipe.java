@@ -28,7 +28,7 @@ public class Recipe extends AuditModel {
     private Recipe(){ this.id = null; }; //no arg constructor
 
     public Recipe(@NotNull String name, Integer prepTime, Integer cookTime, String instructions,
-                  @Size(min = 1, message = "Recipe requires at least 1 ingredient") List<Ingredient> ingredients) {
+                  @Size(min = 1, message = "Recipe requires at least 1 ingredient") List<RecipeIngredient> ingredients) {
         this.name = name;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
@@ -68,11 +68,11 @@ public class Recipe extends AuditModel {
         this.instructions = instructions;
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<RecipeIngredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
     }
 }

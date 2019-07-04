@@ -24,7 +24,7 @@ public class Ingredient extends AuditModel {
         GRAIN,
     }
 
-    private Ingredient(){this.id = null}; // no args constructor
+    private Ingredient(){this.id = null}// no args constructor
 
     public Ingredient(String name, IngredientCategory category) {
         this.name = name;
