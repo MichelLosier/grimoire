@@ -10,7 +10,7 @@ import java.util.Set;
 public class Ingredient extends AuditModel {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private final String id;
+    private int id;
 
     private String name;
     private IngredientCategory category;
@@ -32,7 +32,7 @@ public class Ingredient extends AuditModel {
         OTHER
     }
 
-    private Ingredient(){this.id = null;}// no args constructor
+    public Ingredient(){}// no args constructor
 
     public Ingredient(String name, IngredientCategory category) {
         this.name = name;

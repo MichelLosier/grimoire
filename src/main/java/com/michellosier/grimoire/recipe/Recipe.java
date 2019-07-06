@@ -5,7 +5,6 @@ import com.michellosier.grimoire.model.AuditModel;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,7 +13,7 @@ public class Recipe extends AuditModel {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private final String id;
+    private int id;
 
     @NotNull
     private String name;
@@ -26,7 +25,7 @@ public class Recipe extends AuditModel {
     @Size(min=1, message="Recipe requires at least 1 ingredient")
     private Set<RecipeIngredient> recipeIngredients;
 
-    private Recipe(){ this.id = null; }; //no arg constructor
+    public Recipe(){}; //no arg constructor
 
     public Recipe(@NotNull String name, Integer prepTime, Integer cookTime, String instructions,
                   @Size(min = 1, message = "Recipe requires at least 1 ingredient") Set<RecipeIngredient> recipeIngredients) {
