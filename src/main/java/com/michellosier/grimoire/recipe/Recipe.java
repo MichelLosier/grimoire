@@ -13,7 +13,7 @@ public class Recipe extends AuditModel {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    private Long id;
 
     @NotNull
     private String name;
