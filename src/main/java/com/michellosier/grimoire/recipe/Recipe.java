@@ -1,5 +1,6 @@
 package com.michellosier.grimoire.recipe;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michellosier.grimoire.model.AuditModel;
 
 import javax.persistence.*;
@@ -21,8 +22,9 @@ public class Recipe extends AuditModel {
     private Integer cookTime;
     private String instructions;
 
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     @Size(min=1, message="Recipe requires at least 1 ingredient")
+    @JsonManagedReference
     private Set<RecipeIngredient> recipeIngredients;
 
     public Recipe(){}; //no arg constructor

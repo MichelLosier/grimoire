@@ -3,7 +3,6 @@ package com.michellosier.grimoire.recipe;
 import com.michellosier.grimoire.model.AuditModel;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name="ingredient")
@@ -15,8 +14,8 @@ public class Ingredient extends AuditModel {
     private String name;
     private IngredientCategory category;
 
-    @OneToMany(mappedBy = "ingredient")
-    private Set<RecipeIngredient> recipes;
+//    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)
+//    private Set<RecipeIngredient> recipes;
 
     public static enum IngredientCategory {
         FRUIT,

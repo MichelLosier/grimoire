@@ -1,5 +1,6 @@
 package com.michellosier.grimoire.recipe;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.michellosier.grimoire.model.AuditModel;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ public class RecipeIngredient extends AuditModel {
     @Id
     @JoinColumn(name= "recipe_id")
     @ManyToOne
+    @JsonBackReference
     private Recipe recipe;
 
     @Id
@@ -19,7 +21,7 @@ public class RecipeIngredient extends AuditModel {
 
     private double quantity;
     //TODO: measure unit https://www.baeldung.com/javax-measure
-
+    public RecipeIngredient(){}// no args constructor
     public RecipeIngredient(Ingredient ingredient, Double quantity){
         this.ingredient = ingredient;
         this.quantity = quantity;
