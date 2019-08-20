@@ -15,7 +15,7 @@ public class RecipeResourceAssembler implements ResourceAssembler<Recipe, Resour
     public Resource<Recipe> toResource(Recipe recipe) {
         Resource<Recipe> recipeResource = new Resource<>(recipe,
                 linkTo(methodOn(RecipeController.class).findById(recipe.getId())).withSelfRel(),
-                linkTo(methodOn(RecipeController.class).findAll(null, 0, 5)).withRel("recipes")
+                linkTo(methodOn(RecipeController.class).findAll(null, null, 0, 5)).withRel("recipes")
         );
         return recipeResource;
     }

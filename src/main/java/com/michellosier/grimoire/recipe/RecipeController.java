@@ -24,12 +24,17 @@ public class RecipeController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Recipe>> findAll(
             @RequestParam(value="name", required = false ) String name, //Name to do a partial string search by
+            @RequestParam(value="ingredientName", required = false) String ingredientName,
             @RequestParam(value="page", defaultValue = "0") int page,
             @RequestParam(value="size", defaultValue = "10") int size
     ) {
+
+        //TODO: Make all pageable and handle case of multiple query params
         List<Recipe> recipes;
-        if (name != null && !name.isEmpty()){
+        if (name != null){
             recipes = recipeRepository.findByPartialName(name, PageRequest.of(page, size, Sort.by("name").descending()));
+        } else if (ingredientName != null) {
+            recipes = recipeRepository.findByIngredientName(ingredientName);
         } else {
             recipes = recipeRepository.findAll();
         }
