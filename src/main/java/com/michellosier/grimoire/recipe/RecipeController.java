@@ -32,7 +32,7 @@ public class RecipeController {
         //TODO: Make all pageable and handle case of multiple query params
         List<Recipe> recipes;
         if (name != null){
-            recipes = recipeRepository.findByPartialName(name, PageRequest.of(page, size, Sort.by("name").descending()));
+            recipes = recipeRepository.findByPartialName(name, PageRequest.of(page, size, Sort.by("name").descending()))
         } else if (ingredientName != null) {
             recipes = recipeRepository.findByIngredientName(ingredientName);
         } else {
@@ -43,7 +43,7 @@ public class RecipeController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Recipe> findById(@PathVariable("id") Long id){
-        final Recipe recipe = recipeRepository.findById(id).orElse(null);
+        final Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException(id));
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
