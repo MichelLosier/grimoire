@@ -1,5 +1,6 @@
 package com.michellosier.grimoire.recipe;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.michellosier.grimoire.model.AuditModel;
 

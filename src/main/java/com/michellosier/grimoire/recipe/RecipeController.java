@@ -1,13 +1,13 @@
 package com.michellosier.grimoire.recipe;
 
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -16,51 +16,60 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping("/api/v1/recipe")
 public class RecipeController {
     private final RecipeRepository recipeRepository;
-    private final RecipeResourceAssembler assembler;
 
-    RecipeController(RecipeRepository recipeRepository,
-                     RecipeResourceAssembler assembler
-                     ){
+    RecipeController(RecipeRepository recipeRepository){
         this.recipeRepository = recipeRepository;
-        this.assembler = assembler;
     }
 
-    @GetMapping(produces = "application/json; charset=UTF-8")
-    public Resources<Resource<Recipe>> findAll() {
-        List<Resource<Recipe>> recipes = recipeRepository.findAll().stream()
-                .map(assembler::toResource)
-                .collect(Collectors.toList());
-        return new Resources<>(recipes, linkTo(methodOn(RecipeController.class).findAll()).withSelfRel());
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Recipe>> findAll(
+            @RequestParam(value="name", required = false ) String name, //Name to do a partial string search by
+            @RequestParam(value="ingredientName", required = false) String ingredientName,
+            @RequestParam(value="page", defaultValue = "0") int page,
+            @RequestParam(value="size", defaultValue = "10") int size
+    ) {
+
+        //TODO: Make all pageable and handle case of multiple query params
+        List<Recipe> recipes;
+        if (name != null){
+            recipes = recipeRepository.findByPartialName(name, PageRequest.of(page, size, Sort.by("name").descending()));
+        } else if (ingredientName != null) {
+            recipes = recipeRepository.findByIngredientName(ingredientName);
+        } else {
+            recipes = recipeRepository.findAll();
+        }
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public Resource<Recipe> findById(@PathVariable("id") Long id){
-        return assembler.toResource(recipeRepository.findById(id).orElse(null));
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Recipe> findById(@PathVariable("id") Long id){
+        final Recipe recipe = recipeRepository.findById(id).orElse(null);
+        if (recipe != null){
+            return new ResponseEntity<>(recipe, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
-    @PostMapping(produces = "application/json; charset=UTF-8")
-    public ResponseEntity<Resource<Recipe>> createNewRecipe(@RequestBody Recipe recipe){
-        Recipe newRecipe = recipeRepository.save(recipe);
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Recipe> createNewRecipe(@RequestBody Recipe recipe){
+        final Recipe newRecipe = recipeRepository.save(recipe);
         return ResponseEntity
                 .created(linkTo(methodOn(RecipeController.class).findById(newRecipe.getId())).toUri())
-                .body(assembler.toResource(newRecipe));
+                .body(newRecipe);
     }
 
-    @PutMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public ResponseEntity<Resource<Recipe>> updateRecipe(@PathVariable("id") Long id, @RequestBody Recipe recipe){
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") Long id, @RequestBody Recipe recipe){
         recipe.setId(id);
+        final Recipe updatedRecipe = recipeRepository.save(recipe);
         return ResponseEntity
                 .created(linkTo(methodOn(RecipeController.class).findById(id)).toUri())
-                .body(assembler.toResource(recipeRepository.save(recipe)));
-
+                .body(updatedRecipe);
     }
 
-//    @PatchMapping("/{id}")
-//    public Recipe partialUpdateRecipe(@PathVariable("id") Long id, @RequestBody Recipe recipe){
-//        return recipeRepository.save(recipe);
-//    }
-
-    @DeleteMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteRecipe(@PathVariable("id") Long id){
             recipeRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);

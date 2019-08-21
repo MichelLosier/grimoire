@@ -1,16 +1,19 @@
 package com.michellosier.grimoire.recipe;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.michellosier.grimoire.model.AuditModel;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="ingredient")
+@JsonIgnoreProperties(value={"createdAt", "updatedAt"})
 public class Ingredient extends AuditModel {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    @Column(unique=true)
     private String name;
     private IngredientCategory category;
 

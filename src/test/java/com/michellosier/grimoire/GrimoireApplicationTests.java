@@ -12,5 +12,4 @@ public class GrimoireApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }

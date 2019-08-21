@@ -1,12 +1,14 @@
 package com.michellosier.grimoire.recipe;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.michellosier.grimoire.model.AuditModel;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="recipe_ingredient")
+@JsonIgnoreProperties(value={"createdAt", "updatedAt"})
 public class RecipeIngredient extends AuditModel {
     @Id
     @JoinColumn(name= "recipe_id")
