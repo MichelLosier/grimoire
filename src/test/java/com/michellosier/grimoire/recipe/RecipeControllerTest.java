@@ -1,5 +1,7 @@
 package com.michellosier.grimoire.recipe;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
@@ -23,17 +25,33 @@ public class RecipeControllerTest {
     private final String basePath = "/api/v1/recipe";
 
     @Test
-    public void getAllRecipes() throws Exception {
+    public void whenGetRoot_thenReturnAll() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get(basePath).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getAllRecipeByPartialName() throws Exception {
-        String nameFragment = "ade";
-        String URL = String.format("%s?name=%s", basePath,nameFragment);
+    public void givenPartialNameParam_whenGetRoot_thenReturnSet() throws Exception {
+        final String nameFragment = "ade";
+        final String URL = String.format("%s?name=%s", basePath,nameFragment);
         mvc.perform(MockMvcRequestBuilders.get(URL).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void givenInvalidTypeIdOnPath_whenRoot_thenReturnBadRequest() throws Exception {
+        final String invalidId = "k";
+        final String URL = String.format("%s/%s", basePath,invalidId);
+        mvc.perform(MockMvcRequestBuilders.get(URL).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void givenIdThatDoesNotExist_whenRoot_thenReturnNotFound() throws Exception {
+        final int nonExistId = 999;
+        final String URL = String.format("%s/%d", basePath, nonExistId);
+        mvc.perform(MockMvcRequestBuilders.get(URL).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 
